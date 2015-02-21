@@ -1,0 +1,21 @@
+---
+- name: Docker key
+  apt_key: keyserver=keyserver.ubuntu.com id=36A1D7869245C8950F966E92D8576A8BA88D21E9 state=present
+
+- name: Check docker repository
+  apt_repository: repo='deb https://get.docker.com/ubuntu docker main' state=present
+
+- name: Install needed packages
+  apt: name={{ item }} state=present update_cache=yes
+  with_items:
+    - lxc-docker
+    - nginx
+    - git-core
+    - python-pip
+
+- pip: name=docker-py
+
+- name: Run nginx
+  service: name=nginx state=started
+
+

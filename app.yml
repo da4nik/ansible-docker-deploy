@@ -1,0 +1,16 @@
+---
+- hosts: servers
+  remote_user: vagrant
+  # sudo: yes
+
+  tasks:
+    - name: Clone app repository
+      # shell: git clone git@github.com:adastreamer/tss-rails.git /home/vagrant/repos/tss-rails
+      # git: repo=https://github.com/adastreamer/tss-rails.git
+      git: repo=git@github.com:adastreamer/tss-rails.git
+           dest=/home/vagrant/repos/tss-rails
+           accept_hostkey=yes
+
+    - name: Build docker image
+      docker_image: path="/home/vagrant/repos/tss-rails" name="webapp" state=present
+      sudo: yes
