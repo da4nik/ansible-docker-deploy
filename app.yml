@@ -1,16 +1,36 @@
 ---
 - hosts: servers
   remote_user: vagrant
-  # sudo: yes
+  sudo: yes
+  roles:
+    - app
 
-  tasks:
-    - name: Clone app repository
-      # shell: git clone git@github.com:adastreamer/tss-rails.git /home/vagrant/repos/tss-rails
-      # git: repo=https://github.com/adastreamer/tss-rails.git
-      git: repo=git@github.com:adastreamer/tss-rails.git
-           dest=/home/vagrant/repos/tss-rails
-           accept_hostkey=yes
 
-    - name: Build docker image
-      docker_image: path="/home/vagrant/repos/tss-rails" name="webapp" state=present
-      sudo: yes
+# ---
+# - hosts: servers
+#   remote_user: vagrant
+#   # sudo: yes
+
+#   tasks:
+#     - name: Clone app repository
+#       # shell: git clone git@github.com:adastreamer/tss-rails.git /home/vagrant/repos/tss-rails
+#       # git: repo=https://github.com/adastreamer/tss-rails.git
+#       git: repo=git@github.com:adastreamer/tss-rails.git
+#            dest=/home/vagrant/repos/tss-rails
+#            accept_hostkey=yes
+#       register: app
+
+#     - name: Build docker image
+#       docker_image: path="/home/vagrant/repos/tss-rails" name="webapp" state=build
+#       sudo: yes
+#       when: app.changed
+
+#     - name: Run app container
+#       sudo: yes
+#       docker: image="webapp" name="tss-rails"
+
+#     # - name: Display IP address and port mappings for containers
+#     #   debug: msg={{ item['NetworkSettings']['IPAddress'] }}
+#     #   with_items: docker_containers
+
+

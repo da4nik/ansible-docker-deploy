@@ -18,4 +18,4 @@
 - name: Run nginx
   service: name=nginx state=started
 
-
+- include: ruby_base_image.yml

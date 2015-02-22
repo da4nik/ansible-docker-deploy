@@ -1,0 +1,26 @@
+- name: Clone app repository
+  # shell: git clone git@github.com:adastreamer/tss-rails.git /home/vagrant/repos/tss-rails
+  # git: repo=https://github.com/adastreamer/tss-rails.git
+  git: repo=git@github.com:adastreamer/tss-rails.git
+       dest=/home/vagrant/repos/tss-rails
+       accept_hostkey=yes
+  sudo: no
+  register: app
+
+- name: Build docker image
+  docker_image: path="/home/vagrant/repos/tss-rails" name="webapp" state=build
+  when: app.changed
+
+- name: Run app container
+  docker: image="webapp" name="tss-rails"
+
+# - name: Display IP address and port mappings for containers
+#   debug: msg={{ item['NetworkSettings']['IPAddress'] }}
+#   with_items: docker_containers
+
+- name: Create nginx configuration file
+  template: src=nginx_rails.j2 dest=/etc/nginx/sites-enabled/tss-rails
+  with_items: docker_containers
+
+- name: Restart nginx
+  service: name=nginx state=restarted

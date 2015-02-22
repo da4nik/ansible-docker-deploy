@@ -1,0 +1,10 @@
+- name: Clone base image app
+  git: repo=git@github.com:da4nik/dockerfiles.git
+       dest=/home/vagrant/repos/dockerfiles
+       accept_hostkey=yes
+  sudo: no
+  register: ruby_image
+
+- name: Build base ruby image
+  docker_image: path="/home/vagrant/repos/dockerfiles/ruby" name="ruby" state=present
+  when: ruby_image.changed
