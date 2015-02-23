@@ -1,9 +1,9 @@
 server {
-  server_name econtour.online-lab.ru econ-tour.ru xn----stbjdmlh8e.xn--p1ai;
+  server_name {{ item.item.domains }};
   listen 80;
 
   location / {
-    root /home/onlinelab/repos/econtour-frontend;
+    root /home/vagrant/repos/{{ item.item.name}};
     index index.html index.htm;
   }
 }

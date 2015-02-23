@@ -1,9 +1,9 @@
-upstream tssrails_server {
-  server {{ item['NetworkSettings']['IPAddress'] }} fail_timeout=0;
+upstream {{ item.item.item.name }}_server {
+  server {{ item.ansible_facts.docker_containers[0].NetworkSettings.IPAddress }} fail_timeout=0;
 }
 
 server {
-  server_name tss68.ru;
+  server_name {{ item.item.item.domains }};
   # port to listen for requests on
   listen 80;
   # maximum accepted body size of client request
@@ -16,7 +16,7 @@ server {
     proxy_set_header Host $http_host;
     proxy_redirect off;
 
-    proxy_pass http://tssrails_server;
+    proxy_pass http://{{ item.item.item.name }}_server;
   }
 }
 

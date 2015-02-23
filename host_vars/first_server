@@ -1,0 +1,16 @@
+containers:
+  - name: tss_rails
+    repo: git@github.com:adastreamer/tss-rails.git
+    type: rails
+    domains: tss68.ru
+
+  - name: tss_rails_additional
+    repo: git@github.com:adastreamer/tss-rails.git
+    type: rails
+    domains: additional_tss68.ru
+
+  - name: econtour_front_end
+    repo: git@github.com:adastreamer/econtour-frontend.git
+    type: static
+    domains: econtour.online-lab.ru econ-tour.ru xn----stbjdmlh8e.xn--p1ai
+

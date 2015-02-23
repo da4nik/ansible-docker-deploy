@@ -1,26 +1,33 @@
 - name: Clone app repository
-  # shell: git clone git@github.com:adastreamer/tss-rails.git /home/vagrant/repos/tss-rails
-  # git: repo=https://github.com/adastreamer/tss-rails.git
-  git: repo=git@github.com:adastreamer/tss-rails.git
-       dest=/home/vagrant/repos/tss-rails
+  git: repo={{ item.repo }}
+       dest=/home/vagrant/repos/{{ item.name }}
        accept_hostkey=yes
   sudo: no
-  register: app
+  with_items: containers
+  register: clone_results
+
 
 - name: Build docker image
-  docker_image: path="/home/vagrant/repos/tss-rails" name="webapp" state=build
-  when: app.changed
+  docker_image: path="/home/vagrant/repos/{{ item.item.name }}" name="{{ item.item.name }}" state=build
+  when: item.changed and item.item.type == "rails"
+  with_items: clone_results.results
 
 - name: Run app container
-  docker: image="webapp" name="tss-rails"
+  docker: image="{{ item.item.name }}" name="{{ item.item.name}}"
+  when: item.item.type == "rails"
+  with_items: clone_results.results
+  register: run_container
 
-# - name: Display IP address and port mappings for containers
-#   debug: msg={{ item['NetworkSettings']['IPAddress'] }}
-#   with_items: docker_containers
 
-- name: Create nginx configuration file
-  template: src=nginx_rails.j2 dest=/etc/nginx/sites-enabled/tss-rails
-  with_items: docker_containers
+- name: Create nginx containered configuration file
+  template: src=nginx_{{ item.item.item.type }}.j2 dest=/etc/nginx/sites-enabled/{{ item.item.item.name }}
+  when: item.item is defined
+  with_items: run_container.results
+
+- name: Create nginx static configuration file
+  template: src=nginx_{{ item.item.type }}.j2 dest=/etc/nginx/sites-enabled/{{ item.item.name }}
+  when: item.changed and item.item.type == 'static'
+  with_items: clone_results.results
 
 - name: Restart nginx
   service: name=nginx state=restarted
