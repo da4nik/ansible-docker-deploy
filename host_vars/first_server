@@ -1,13 +1,11 @@
+remote_user: vagrant
+volume_path: /home/{{ remote_user }}/volumes
 containers:
   - name: tss_rails
     repo: git@github.com:adastreamer/tss-rails.git
     type: rails
+    db_volume: /webapp/db/data
     domains: tss68.ru
-
-  - name: tss_rails_additional
-    repo: git@github.com:adastreamer/tss-rails.git
-    type: rails
-    domains: additional_tss68.ru
 
   - name: econtour_front_end
     repo: git@github.com:adastreamer/econtour-frontend.git
