@@ -1,0 +1,9 @@
+---
+postgres_docker_image: postgres:9.4
+postgres_local_data_directory: /data/postgres/db
+
+postgres_container_port: 5432
+postgres_host_port: 5432
+
+postgres_password: superpassword
+

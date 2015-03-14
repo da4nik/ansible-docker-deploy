@@ -1,12 +1,26 @@
 ---
-- name: Key
-- apt_key: keyserver=hkp://keyserver.ubuntu.com:80 id=7F0CEB10 state=present
+# - name: Key
+# - apt_key: keyserver=hkp://keyserver.ubuntu.com:80 id=7F0CEB10 state=present
 
-- name: Repository
-- apt_repository: repo='deb http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release }}/mongodb-org/3.0 multiverse' state=present
+# - name: Repository
+# - apt_repository: repo='deb http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release }}/mongodb-org/3.0 multiverse' state=present
 
-- name: Package
-- apt: name=mongodb-org update_cache=yes state=present
+# - name: Package
+# - apt: name=mongodb-org update_cache=yes state=present
 
-- name: Start service
-- service: name=mongod state=started
+# - name: Start service
+# - service: name=mongod state=started
+
+
+- name: Create db path
+  file: path={{ mongo_local_data_directory }} state=directory
+
+- name: Run mongo container
+  docker:
+    image={{ mongo_docker_image }}
+    ports={{ mongo_host_port }}:{{ mongo_container_port }}
+    volumes={{ mongo_local_data_directory }}:/data/db
+    state=running
+    name=mongo
+  async: 600
+  poll: 5

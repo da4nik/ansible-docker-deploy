@@ -5,6 +5,7 @@ containers:
     repo: git@github.com:adastreamer/tss-rails.git
     type: rails
     db_volume: /webapp/db/data
+    static_volume: /webapp/static
     domains: tss68.ru
 
   - name: econtour_front_end

@@ -1,0 +1,14 @@
+---
+- name: Create db path
+  file: path={{ postgres_local_data_directory }} state=directory
+
+- name: Run postgres container
+  docker:
+    image={{ postgres_docker_image }}
+    ports={{ postgres_host_port }}:{{ postgres_container_port }}
+    volumes={{ postgres_local_data_directory }}:/var/lib/postgresql/data
+    env="POSTGRES_PASSWORD={{ postgres_password }}"
+    state=running
+    name=postgres
+  async: 600
+  poll: 5
