@@ -1,7 +1,0 @@
----
-- hosts: servers
-  remote_user: {{ remote_user}}
-  sudo: yes
-  roles:
-    - webserver
-    # - app

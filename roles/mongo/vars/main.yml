@@ -1,0 +1,7 @@
+---
+mongo_docker_image: mongo:3
+mongo_local_data_directory: /data/mongodb/db
+
+mongo_container_port: 27017
+mongo_host_port: 27017
+

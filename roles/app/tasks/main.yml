@@ -9,14 +9,9 @@
 
 # ============= Rails app containers
 
-# - name: Build docker image
-#   docker_image: path="/home/{{ remote_user }}/repos/{{ item.item.name }}" name="{{ item.item.name }}" state=build
-#   when: item.changed and item.item.type == "rails"
-#   with_items: clone_results.results
-
-- name: Debug names
-  debug: msg="{{ item.item }}"
-  when: item.changed && item.item.type == "rails"
+- name: Build docker image
+  docker_image: path="/home/{{ remote_user }}/repos/{{ item.item.name }}" name="{{ item.item.name }}" state=build
+  when: item.changed and item.item.type == "rails"
   with_items: clone_results.results
 
 - name: Remove old containers
