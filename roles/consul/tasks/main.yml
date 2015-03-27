@@ -1,0 +1,44 @@
+---
+- name: update apt
+  apt: update_cache=yes cache_valid_time=3600
+
+- name: install deps
+  apt: pkg={{ item }} state=installed
+  with_items:
+    - unzip
+    - jq
+
+- name: Download consul
+  get_url: url={{ consul_download_url }} dest={{ consul_dest_dir }}
+  register: consul_was_downloaded
+
+- name: Copy and unpack
+  unarchive: >
+    src={{ consul_dest_dir }}/{{ consul_archive }}
+    dest={{ consul_dest_dir }}
+    copy=no
+  when: consul_was_downloaded|changed
+
+- name: Copy consul upstart script
+  template: >
+    src=consul.conf.j2
+    dest=/etc/init/consul.conf
+    # owner={{consul_user}}
+    # group={{consul_group}}
+    mode=0755
+
+- name: copy consulkv script
+  template: >
+    src=consulkv.j2
+    dest={{consul_dest_dir}}/consulkv
+    # owner={{consul_user}}
+    # group={{consul_group}}
+    mode=0755
+
+- name: consul config file
+  template: >
+    src=consul.json.j2
+    dest={{ consul_config_file }}
+    # owner={{consul_user}}
+    # group={{consul_group}}
+    mode=0755

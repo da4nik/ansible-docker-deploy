@@ -9,5 +9,6 @@
   apt: name={{ item }} state=present update_cache=yes
   with_items:
     - lxc-docker
+    - python-setuptools
 
 - easy_install: name=docker-py

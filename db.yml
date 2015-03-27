@@ -1,8 +1,8 @@
 ---
 - hosts: db
-  remote_user: vagrant
+  remote_user: onlinelab
   sudo: yes
   roles:
     - docker
-    - mongo
+    # - mongo
     - postgres
