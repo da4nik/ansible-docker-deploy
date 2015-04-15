@@ -1,0 +1,9 @@
+remote_user: onlinelab
+frontend_proxy: true
+containers:
+  - name: tss
+    repo: git@github.com:Online-Lab/tss-rails.git
+
+  - name: econtour
+    repo: git@github.com:Online-Lab/econtour-rails.git
+

@@ -1,0 +1,49 @@
+- name: Clone app repository
+  git: repo={{ item.repo }}
+       dest=/home/{{ remote_user }}/repos/{{ item.name }}
+       accept_hostkey=yes
+  sudo: no
+  with_items: containers
+  register: clone_results
+
+
+# ============= Rails app containers
+
+- name: Build docker image
+  docker_image: path="/home/{{ remote_user }}/repos/{{ item.item.name }}" name="{{ item.item.name }}" state=build
+  when: item.changed and item.item.type == "rails"
+  with_items: clone_results.results
+
+- name: Remove old containers
+  docker:
+    name="{{ item.item.name }}"
+    image="{{ item.item.name }}"
+    state=absent
+  when: item.changed && item.item.type == "rails"
+  with_items: clone_results.results
+
+- name: Run app container
+  docker:
+    image="{{ item.item.name }}"
+    name="{{ item.item.name }}"
+    volumes="{{ volume_path }}/{{ item.item.name }}/db:{{ item.item.db_volume }}"
+    state=running
+  when: item.changed && item.item.type == "rails"
+  with_items: clone_results.results
+  register: run_container
+
+- name: Create nginx containered configuration file
+  template: src=nginx_{{ item.item.item.type }}.j2 dest=/etc/nginx/sites-enabled/{{ item.item.item.name }}
+  when: item.item is defined
+  with_items: run_container.results
+  notify: Restart nginx
+
+# ============= Static sites
+
+- name: Create nginx static configuration file
+  template: src=nginx_{{ item.item.type }}.j2 dest=/etc/nginx/sites-enabled/{{ item.item.name }}
+  when: item.changed and item.item.type == 'static'
+  with_items: clone_results.results
+  notify: Restart nginx
+
+

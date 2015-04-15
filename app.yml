@@ -1,7 +1,8 @@
 ---
-- hosts: servers
-  remote_user: "{{ remote_user}}"
+- hosts: all
+  remote_user: "{{ remote_user }}"
   sudo: yes
-  gather_facts: no
+  gather_facts: yes
   roles:
+    - docker
     - app

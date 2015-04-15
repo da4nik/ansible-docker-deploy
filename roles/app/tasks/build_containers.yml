@@ -1,0 +1,17 @@
+- name: Clone app repository
+  git: repo={{ item.repo }}
+       dest=/data/repos/{{ item.name }}
+       accept_hostkey=yes
+  sudo: no
+  with_items: containers
+  register: clone_results
+
+- name: Build docker images
+  docker_image: path="/data/repos/{{ item.item.name }}"
+                name="{{ item.item.name }}-{{ item.after[0:6] }}"
+                state=present
+  with_items: clone_results.results
+
+- name: Cleanup :)
+  command: porter cleanup
+  changed_when: False

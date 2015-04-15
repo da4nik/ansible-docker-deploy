@@ -1,4 +1,4 @@
 [web]
-first_server ansible_ssh_host=192.168.1.37
+web01 ansible_ssh_host=109.120.152.6 ansible_ssh_port=30000
 [db]
-db_server ansible_ssh_host=192.168.1.40
+db_server ansible_ssh_host=109.120.166.10 ansible_ssh_port=30000
