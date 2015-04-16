@@ -27,6 +27,15 @@
       ssh_key_bits=2048
       state=present
 
+  - name: Sudoers | update sudoers file and validate
+    lineinfile: >
+      dest=/etc/sudoers
+      insertafter=EOF
+      line='{{ user_name }} ALL=(ALL) NOPASSWD: ALL'
+      regexp='{{ user_name }} ALL=(ALL) NOPASSWD: ALL'
+      state=present"
+    sudo: true
+
   - name: Add my workstation user's public key to the new user
     authorized_key:
       user: "{{ user_name }}"
@@ -47,12 +56,12 @@
       line: "PermitRootLogin no"
       state: present
 
-  - name: Remove password SSH access
-    lineinfile:
-      dest: /etc/ssh/sshd_config
-      regexp: "^PasswordAuthentication"
-      line: "PasswordAuthentication no"
-      state: present
+  # - name: Remove password SSH access
+  #   lineinfile:
+  #     dest: /etc/ssh/sshd_config
+  #     regexp: "^PasswordAuthentication"
+  #     line: "PasswordAuthentication no"
+  #     state: present
 
   - name: Reboot the server
     command: /sbin/reboot

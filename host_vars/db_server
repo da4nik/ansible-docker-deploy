@@ -1,1 +1,5 @@
 remote_user: onlinelab
+
+consul_is_server: true
+consul_node_name: 'db'
+consul_bind_address: 10.127.6.151

@@ -1,9 +1,14 @@
 remote_user: onlinelab
 frontend_proxy: true
+
+consul_node_name: 'web'
+consul_bind_address: 10.127.6.150
+consul_servers: ["10.127.6.151"]
+consul_join_at_start: true
+
 containers:
   - name: tss
     repo: git@github.com:Online-Lab/tss-rails.git
 
   - name: econtour
     repo: git@github.com:Online-Lab/econtour-rails.git
-
