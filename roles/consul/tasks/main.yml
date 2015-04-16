@@ -17,3 +17,12 @@
 
 - name: Start consul service
   service: name=consul state=started
+
+- name: Check porter installed
+  command: "{{ porter_dest_dir }}/porter version"
+  register: current_porter_version
+  changed_when: current_porter_version.stdout.strip() != porter_version
+
+- name: Install porter if not
+  include: porter.yml
+  when: current_porter_version.stdout.strip() != porter_version

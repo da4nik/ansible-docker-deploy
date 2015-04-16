@@ -1,0 +1,3 @@
+---
+- name: Download porter
+  get_url: url={{ porter_download_url }} dest="{{ porter_dest_dir }}/" force=true validate_certs=no mode="a+x"
